@@ -1,19 +1,14 @@
-# workflow for this template
+# Sid_Compression_tool
 
-First step after templating and cloning this template
-```text
-git checkout --orphan signatures
-git rm -rf .
-git commit --allow-empty -m "Initial signatures branch"
-git push origin signatures
-git checkout main
-```
+This is a .bat file tool that uses ffmpegg to compress videos.
+more will be added soon.
 
-Second step:
+## Contributing
 
-On the GitHub webpage, navigate to the `signatures` branch, create a file named cla.json, paste the following inside, and commit.
-```
-{ 
-"signedContributors": [] 
-}
-```
+We welcome contributions! Please review [CONTRIBUTING.md](CONTRIBUTING.md) and note that all contributors must sign our [Contributor License Agreement (CLA)](CLA.md) before pull requests can be merged.
+
+## License
+
+This project is licensed under the terms of the [PROPRIETARY SOURCE-AVAILABLE LICENSE](LICENSE).
+
+---

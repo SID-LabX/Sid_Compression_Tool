@@ -1,3 +1,3 @@
-## Contributing to SidWinder
+## Contributing to this Project, Sid_Compression_Tool
 
 We welcome contributions, but to protect the project, all contributors must sign our Contributor License Agreement (CLA) before any code can be merged. When you open a Pull Request, our CLA bot will prompt you to review and sign the agreement.
