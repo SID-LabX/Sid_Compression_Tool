@@ -96,6 +96,7 @@ echo [Processing] Scanning "input" folder...
 echo.
 
 set "COUNT=0"
+set "SKIPPED=0"
 
 for /R "%IN_DIR%" %%F in (*.mp4 *.mov *.mkv *.avi *.m4v *.webm *.mts) do (
     set "FILE_PATH=%%F"
@@ -108,27 +109,34 @@ for /R "%IN_DIR%" %%F in (*.mp4 *.mov *.mkv *.avi *.m4v *.webm *.mts) do (
     )
     set "FINAL_OUTPUT=!TARGET_SUBDIR!!TARGET_NAME!.mp4"
 
-    if not exist "!TARGET_SUBDIR!" mkdir "!TARGET_SUBDIR!"
+    :: Check if output file already exists
+    if exist "!FINAL_OUTPUT!" (
+        echo [SKIPPED] Already exists: "!TARGET_NAME!.mp4"
+        set /a SKIPPED+=1
+    ) else (
+        if not exist "!TARGET_SUBDIR!" mkdir "!TARGET_SUBDIR!"
 
-    echo -------------------------------------------------------------------------
-    echo Encoding: "%%~nxF"
-    echo -------------------------------------------------------------------------
+        echo -------------------------------------------------------------------------
+        echo Encoding: "%%~nxF"
+        echo -------------------------------------------------------------------------
 
-    ffmpeg -hide_banner -loglevel warning -stats -i "%%F" ^
-      -map 0:v:0 -map 0:a? ^
-      -c:v libx265 -pix_fmt yuv420p10le -crf !CRF_VAL! -preset medium ^
-      !A_PARAMS! ^
-      -map_metadata 0 -movflags +faststart "!FINAL_OUTPUT!" -y
+        ffmpeg -hide_banner -loglevel warning -stats -i "%%F" ^
+          -map 0:v:0 -map 0:a? ^
+          -c:v libx265 -pix_fmt yuv420p10le -crf !CRF_VAL! -preset medium ^
+          !A_PARAMS! ^
+          -map_metadata 0 -movflags +faststart "!FINAL_OUTPUT!" -n
 
-    set /a COUNT+=1
-    echo.
+        set /a COUNT+=1
+        echo.
+    )
 )
 
-if !COUNT! equ 0 (
+if !COUNT! equ 0 if !SKIPPED! equ 0 (
     echo [!] No video files found in the "input" folder!
 ) else (
     echo =========================================================================
-    echo [SUCCESS] Finished processing !COUNT! video(s) using !PROFILE_NAME!!
+    echo [SUCCESS] Finished! Processed: !COUNT! ^| Skipped: !SKIPPED!
+    echo Profile used: !PROFILE_NAME!
     echo Your converted files are in the "output" folder.
     echo =========================================================================
 )
